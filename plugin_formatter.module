@@ -73,14 +73,14 @@ function plugin_formatter_field_formatter_settings_summary($field, $instance, $v
 
 /**
  * Implements hook_field_formatter_prepare_view().
- *
- * This preloads all taxonomy terms for multiple loaded objects at once and
- * unsets values for invalid terms that do not exist.
  */
 function plugin_formatter_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $displays) {
   switch ($field['type']) {
     case 'taxonomy_term_reference':
       taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, $items, $displays);
+      break;
+    case 'entity_reference':
+      entityreference_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, $items, $displays);
       break;
   }
 }
