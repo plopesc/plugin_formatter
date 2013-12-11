@@ -1,0 +1,97 @@
+<?php
+/**
+ * @file
+ * Code for the openbbva_commons module.
+ */
+
+/**
+ * @return array PluginFormatterInterface
+ */
+function plugin_formatter_get_plugin_formatters() {
+  $plugins = &drupal_static(__FUNCTION__);
+  if (!$plugins) {
+    module_load_include('inc','plugin_formatter', 'plugin_formatter.base');
+    $plugins_definition = file_scan_directory(drupal_get_path('module', 'plugin_formatter') . '/plugins', '/.*/');
+    foreach($plugins_definition as $plugin_definition) {
+      include($plugin_definition->uri);
+      $class = $plugin_definition->name;
+      $plugin = new $class;
+      $plugins[$plugin->getName()] = $plugin;
+    }
+  }
+  return $plugins;
+}
+
+/**
+ * @param string $name
+ * @return PluginFormatterInterface|bool
+ */
+function plugin_formatter_get_plugin_formatter($name) {
+  $plugins = plugin_formatter_get_plugin_formatters();
+  return isset($plugins[$name]) ? $plugins[$name] : FALSE;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function plugin_formatter_field_formatter_info() {
+  $plugins = plugin_formatter_get_plugin_formatters();
+  $formatter_info =  array();
+
+  foreach ($plugins as $name => $plugin) {
+    $formatter_info[$name] = $plugin->getInfo();
+  }
+
+  return $formatter_info;
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function plugin_formatter_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+
+  if ($plugin = plugin_formatter_get_plugin_formatter($display['type'])) {
+    return $plugin->settingsForm($field, $instance, $view_mode, $form, $form_state);
+  }
+
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function plugin_formatter_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $summary = array();
+
+  if ($plugin = plugin_formatter_get_plugin_formatter($display['type'])) {
+    $summary =  $plugin->settingsSummary($field, $instance, $view_mode);
+  }
+
+  return implode('<br />', $summary);
+}
+
+/**
+ * Implements hook_field_formatter_prepare_view().
+ *
+ * This preloads all taxonomy terms for multiple loaded objects at once and
+ * unsets values for invalid terms that do not exist.
+ */
+function plugin_formatter_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items, $displays) {
+  switch ($field['type']) {
+    case 'taxonomy_term_reference':
+      taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, $instances, $langcode, $items, $displays);
+      break;
+  }
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function plugin_formatter_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  if ($plugin = plugin_formatter_get_plugin_formatter($display['type'])) {
+    return $plugin->viewElements($entity_type, $entity, $field, $instance, $langcode, $items, $display);
+  }
+
+  return array();
+}

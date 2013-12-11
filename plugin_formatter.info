@@ -1,0 +1,5 @@
+name = Plugin formatter 
+description = "Pseudo plugin manager for Drupal 7 Field formatters"
+core = 7.x
+package = Field
+
