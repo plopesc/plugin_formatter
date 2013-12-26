@@ -13,10 +13,13 @@ function plugin_formatter_get_plugin_formatters() {
     module_load_include('inc','plugin_formatter', 'plugin_formatter.base');
     $plugins_definition = file_scan_directory(drupal_get_path('module', 'plugin_formatter') . '/plugins', '/.*/');
     foreach($plugins_definition as $plugin_definition) {
-      include($plugin_definition->uri);
+      include_once($plugin_definition->uri);
       $class = $plugin_definition->name;
-      $plugin = new $class;
-      $plugins[$plugin->getName()] = $plugin;
+      $reflectionClass = new ReflectionClass($class);
+      if ($reflectionClass->isInstantiable()) {
+        $plugin = new $class;
+        $plugins[$plugin->getName()] = $plugin;
+      }
     }
   }
   return $plugins;
