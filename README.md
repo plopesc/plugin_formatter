@@ -1,6 +1,8 @@
 plugin_formatter
 ================
 
+[![Build Status](https://travis-ci.org/plopesc/plugin_formatter.png)](https://travis-ci.org/plopesc/plugin_formatter)
+
 Pseudo plugin manager for Drupal 7 Field formatters.
 
 It provides an API similar to D8 FormatterInterface.
