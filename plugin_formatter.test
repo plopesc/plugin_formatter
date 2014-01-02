@@ -2,7 +2,7 @@
 
 /**
  * @file
- * File that holds functional tests for PluginFormatter module.
+ * File that holds functional tests for Plugin formatter module.
  */
 
 class PluginFormatterTestCase extends DrupalWebTestCase {
