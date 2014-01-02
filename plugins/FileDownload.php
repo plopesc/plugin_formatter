@@ -9,14 +9,21 @@ class FileDownload extends PluginFormatterBase {
     return 'file_download';
   }
 
- /**
- * {@inheritdoc}
- */
+  /**
+   * {@inheritdoc}
+   */
   function getInfo() {
     return array(
       'label' => t('Document download'),
       'field types' => array('file'),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function getDependency() {
+    return 'file';
   }
 
   /**

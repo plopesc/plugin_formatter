@@ -20,6 +20,13 @@ class ImageTitlePlugin extends PluginFormatterBase {
   /**
    * {@inheritdoc}
    */
+  function getDependency() {
+    return 'image';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   function settingsForm($field, $instance, $view_mode, $form, &$form_state) {
     $display = $instance['display'][$view_mode];
     $settings = $display['settings'];

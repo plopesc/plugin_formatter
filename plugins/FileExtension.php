@@ -22,6 +22,13 @@ class FileExtension extends PluginFormatterBase {
   /**
    * {@inheritdoc}
    */
+  function getDependency() {
+    return 'file';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   function viewElements($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
     $element = array();
     foreach ($items as $delta => $item) {

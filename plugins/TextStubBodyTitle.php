@@ -15,8 +15,15 @@ class TextStubBodyTitle extends PluginFormatterBase {
   function getInfo() {
     return array(
       'label' => t('Stub title'),
-      'field types' => array('text',),
+      'field types' => array('text'),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function getDependency() {
+    return 'text';
   }
 
   /**

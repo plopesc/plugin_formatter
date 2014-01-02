@@ -7,6 +7,13 @@ abstract class TaxonomyTermLinkBase extends PluginFormatterBase {
   /**
    * {@inheritdoc}
    */
+  function getDependency() {
+    return 'taxonomy';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   function viewElements($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
     $element = array();
     // Terms whose tid is 'autocreate' do not exist

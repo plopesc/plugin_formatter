@@ -37,6 +37,14 @@ interface PluginFormatterInterface {
   function getInfo();
 
   /**
+   * Specifies the module that provides the defined formatter.
+   *
+   * @return string
+   *   The formatter dependency
+   */
+  function getDependency();
+
+  /**
    * Specify the form elements for a formatter's settings.
    *
    * @param $field

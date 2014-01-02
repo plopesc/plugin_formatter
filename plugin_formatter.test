@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * File that holds functional tests for PluginFormatter module.
+ */
+
+class PluginFormatterTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Plugin Formatter basic',
+      'description' => 'Tests basic module functionality.',
+      'group' => 'Plugin formatter',
+    );
+  }
+
+  function setUp() {
+    // Enable minimum required modules.
+    parent::setUp('plugin_formatter');
+  }
+
+  function testFormatterExists() {
+    $dependencies = array();
+    $plugins = plugin_formatter_get_plugin_formatters();
+
+    foreach ($plugins as $plugin) {
+      if (!in_array($plugin->getDependency(), $dependencies)) {
+        $dependencies[] = $plugin->getDependency();
+      }
+    }
+
+    module_enable($dependencies);
+    module_load_include('inc', 'field_ui', 'field_ui.admin');
+    $fields = field_ui_formatter_options();
+
+    foreach ($plugins as $name => $plugin) {
+      $info = $plugin->getInfo();
+      $types = $info['field types'];
+      foreach ($types as $type) {
+        $this->assertTrue(isset($fields[$type][$name]), 'Formatter <b>' . $name . '</b> available for field type <b>' . $type . '</b>');
+      }
+    }
+
+  }
+}
